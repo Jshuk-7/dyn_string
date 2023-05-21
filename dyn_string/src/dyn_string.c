@@ -20,10 +20,8 @@ int main(void)
     {
         DString string = dstring_create("Hello, World!");
 
-        size_t pos = dstring_find(&string, 'C');
-        if (pos != DYN_STRING_NPOS) {
-            printf("%zu\n", pos);
-        }
+        dstring_replace(&string, 0, "Hello, ", "");
+        printf("%s\n", dstring_to_cstr(&string));
     }
     return 0;
 }

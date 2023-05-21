@@ -91,6 +91,12 @@ void dstring_replace(DString* string, size_t offset, const char_t* old_val, cons
 /// @return position of 'c' in string if found otherwise returns DYN_STRING_NPOS
 size_t dstring_find(DString* string, char_t c);
 
+/// @brief finds the last instance of 'c' in string
+/// @param string said string
+/// @param c the character to search for
+/// @return position of 'c' in string if found otherwise returns DYN_STRING_NPOS
+size_t dstring_reverse_find(DString *string, char_t c);
+
 /// @brief compares two strings
 /// @param lhs left operand
 /// @param rhs right operand
@@ -215,6 +221,19 @@ size_t dstring_find(DString* string, char_t c)
     D_ASSERT(string->data != NULL);
 
     for (size_t i = 0; i < string->size; i++) {
+        if (string->data[i] == c) {
+            return i;
+        }
+    }
+
+    return DYN_STRING_NPOS;
+}
+
+size_t dstring_reverse_find(DString *string, char_t c)
+{
+    D_ASSERT(string->data != NULL);
+
+    for (size_t i = string->size - 1; i >= 0; i--) {
         if (string->data[i] == c) {
             return i;
         }
