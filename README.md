@@ -1,2 +1,2 @@
 # dyn_string
-dynamic string implementation
+fully featured dynamic string implementation in pure c
