@@ -18,12 +18,12 @@ int main(void)
     printf("-------------------------------\n");
 
     {
-        DString string = dstring_create_with_capacity(20);
-        for (size_t i = 0; i < 20; i++) {
-            dstring_push(&string, 'a');
-        }
+        DString string = dstring_create("Hello, World!");
 
-        printf("%s", dstring_to_cstr(&string));
+        size_t pos = dstring_find(&string, 'C');
+        if (pos != DYN_STRING_NPOS) {
+            printf("%zu\n", pos);
+        }
     }
     return 0;
 }
