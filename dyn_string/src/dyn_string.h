@@ -6,7 +6,7 @@
  *
  * 1. Copy and paste this file into your project
  *
- * 2. In 'one' .c or .cpp file type
+ * 2. In 'one' .c or .cpp file type the following lines
  *    #define DYN_STRING_IMPLEMENTATION
  *    #include "dyn_string.h"
  *
@@ -76,9 +76,8 @@ DString dstring_create(char_t *data)
 {
     DString string;
     string.size = strlen((const char_t *)data);
-    string.capacity = string.size * 2;
-    string.data = (char_t *)D_MALLOC(sizeof(char_t) * string.capacity);
-    D_ASSERT(string.data != NULL);
+    string.data = NULL;
+    dstring_realloc(&string, string.size * 2);
     memcpy(string.data, data, string.size);
     string.data[string.size] = '\0';
     return string;
@@ -87,10 +86,9 @@ DString dstring_create(char_t *data)
 DString dstring_create_with_capacity(size_t capacity)
 {
     DString string;
-    string.capacity = capacity;
     string.size = 0;
-    string.data = (char_t*)D_MALLOC(sizeof(char_t) * string.capacity);
-    D_ASSERT(string.data != NULL);
+    string.data = NULL;
+    dstring_realloc(&string, capacity);
     return string;
 }
 
@@ -99,13 +97,20 @@ void dstring_destroy(DString* string)
     string->size = 0;
     string->capacity = 0;
     D_FREE(string->data);
+    string->data = NULL;
 }
 
 void dstring_realloc(DString* string, size_t new_capacity)
 {
+    if (string->data == NULL) {
+        string->data = (char_t*)D_MALLOC(sizeof(char_t) * new_capacity);
+    } else {
+        static int i = 0;
+        string->data = (char_t*)D_REALLOC(string->data, sizeof(char_t) * new_capacity);
+    }
+
     D_ASSERT(string->data != NULL);
-    string->data = (char_t*)D_REALLOC(string->data, new_capacity);
-    D_ASSERT(string->data != NULL);
+    string->capacity = new_capacity;
 }
 
 const char_t* dstring_to_cstr(DString* string)
