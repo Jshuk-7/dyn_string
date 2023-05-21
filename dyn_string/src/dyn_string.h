@@ -1,6 +1,30 @@
 #ifndef DYN_STRING_H
 #define DYN_STRING_H
 
+/*
+ * To begin using the dyn_string library:
+ *
+ * 1. Copy and paste this file into your project
+ *
+ * 2. In 'one' .c or .cpp file type
+ *    #define DYN_STRING_IMPLEMENTATION
+ *    #include "dyn_string.h"
+ *
+ * 3. Then whenever you need access to the library in another .c/.cpp file
+ *    just '#include "dyn_string.h"' and you're off!
+ *
+ * Things to note:
+ * 
+ * 1. The string will always be null terminated, so long as you don't
+ *    mess with the 'data' pointer. So to stay safe,
+ *    never access the data pointer directly, always try to use a library function.
+ *    "you mean I have to call a function to do ...?"
+ *    yes sir, this is c after all
+ * 
+ * 2. You can however access the size and capacity of the string if need be.
+ *    These members should also never be modified directly, only through a library function.
+ */
+
 #include <string.h>
 
 #ifndef D_MALLOC
