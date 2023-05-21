@@ -68,6 +68,12 @@ const char_t* dstring_to_cstr(DString* string);
 void dstring_push(DString* string, char_t c);
 char_t dstring_pop(DString* string);
 
+/// @brief compares two strings
+/// @param lhs left operand
+/// @param rhs right operand
+/// @return 1 if strings are equal otherwise 0
+int dstring_cmp(DString* lhs, DString* rhs);
+
 #endif
 
 #ifdef DYN_STRING_IMPLEMENTATION
@@ -137,6 +143,15 @@ char_t dstring_pop(DString* string)
     string->size--;
     string->data[string->size] = '\0';
     return c;
+}
+
+int dstring_cmp(DString *lhs, DString *rhs)
+{
+    if (lhs->size != rhs->size) {
+        return 0;
+    }
+    
+    return strcmp(lhs->data, rhs->data) == 0;
 }
 
 #endif

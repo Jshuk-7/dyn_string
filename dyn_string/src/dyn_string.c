@@ -5,12 +5,25 @@
 
 int main(void)
 {
-    DString string = dstring_create("Hello, World");
-    printf("%s | %zu | %zu\n", dstring_to_cstr(&string), string.size, string.capacity);
-    dstring_push(&string, '!');
-    printf("%s | %zu | %zu\n", dstring_to_cstr(&string), string.size, string.capacity);
-    char_t c = dstring_pop(&string);
-    printf("%s | %zu | %zu\n", dstring_to_cstr(&string), string.size, string.capacity);
-    dstring_destroy(&string);
+    {
+        DString string = dstring_create("Hello, World");
+        printf("%s | %zu | %zu\n", dstring_to_cstr(&string), string.size, string.capacity);
+        dstring_push(&string, '!');
+        printf("%s | %zu | %zu\n", dstring_to_cstr(&string), string.size, string.capacity);
+        char_t c = dstring_pop(&string);
+        printf("%s | %zu | %zu\n", dstring_to_cstr(&string), string.size, string.capacity);
+        dstring_destroy(&string);
+    }
+
+    printf("-------------------------------\n");
+
+    {
+        DString string = dstring_create_with_capacity(20);
+        for (size_t i = 0; i < 20; i++) {
+            dstring_push(&string, 'a');
+        }
+
+        printf("%s", dstring_to_cstr(&string));
+    }
     return 0;
 }
