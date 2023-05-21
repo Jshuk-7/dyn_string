@@ -140,7 +140,6 @@ void dstring_realloc(DString* string, size_t new_capacity)
     if (string->data == NULL) {
         string->data = (char_t*)D_MALLOC(sizeof(char_t) * new_capacity);
     } else {
-        static int i = 0;
         string->data = (char_t*)D_REALLOC(string->data, sizeof(char_t) * new_capacity);
     }
 
