@@ -22,7 +22,17 @@ int main(void)
 
         DString sub = dstring_substring(&string, 0, 5);
         dstring_push(&sub, '!');
-        printf("%s\n", dstring_to_cstr(&sub));
+        printf("Substring: %s\n", dstring_to_cstr(&sub));
     }
+
+    printf("-------------------------------\n");
+
+    {
+        DString string1 = dstring_create("Hello, World!");
+        DString string2 = dstring_create("Hello, World!");
+        int equal = dstring_cmp(&string1, &string2);
+        printf("Equal: %i\n", equal);
+    }
+    
     return 0;
 }

@@ -63,42 +63,78 @@ typedef struct DString
     size_t capacity;
 } DString;
 
+/// @brief Creates a new heap allocated string from 'data'. The capacity will default to double the size of 'data'.
+/// @param data the data to store in the string
+/// @return a new string
 DString dstring_create(char_t* data);
+
+/// @brief Creates a new heap allocated string.
+/// @param capacity the capacity of the string
+/// @return an empty string with 'capacity'
 DString dstring_create_with_capacity(size_t capacity);
+
+/// @brief Frees the strings buffer.
+/// @param string said string
 void dstring_destroy(DString* string);
+
+/// @brief Reallocates the strings buffer to 'new_capacity'.
+/// @param string said string
+/// @param new_capacity the new capacity of the string
 void dstring_realloc(DString* string, size_t new_capacity);
+
+/// @brief Converts the strings buffer to a c string.
+/// @param string said string
+/// @return the strings buffer as a null terminated c string
 const char_t* dstring_to_cstr(DString* string);
+
+/// @brief Gets a substring from a string.
+/// @param string the string to extract from
+/// @param offset where to start the substring
+/// @param count the length of the substring
+/// @return a new string with capacity of 'count'
 DString dstring_substring(DString* string, size_t offset, size_t count);
+
+/// @brief Pushes a character to the strings buffer. This will cause a reallocation if pushing exceeds the strings capacity.
+/// @param string said string
+/// @param c the character to push
 void dstring_push(DString* string, char_t c);
+
+/// @brief Pops a character from the strings buffer. Decreases size by 1.
+/// @param string said string
+/// @return the last character in the strings buffer
 char_t dstring_pop(DString* string);
 
-/// @brief shifts all elements of string by 'amount'
+/// @brief Checks if the string is empty.
+/// @param string said string
+/// @return 1 if empty otherwise 0
+int dstring_empty(DString* string);
+
+/// @brief Shifts all elements of string by 'amount'.
 /// @param string said string
 /// @param offset where to start shifting
 /// @param amount the amount of elements to shift by
 void dstring_shift(DString *string, size_t offset, int32_t amount);
 
-/// @brief replaces a substring within the string. if new_val and old_val are not the same
-///        length, the string will resize accordingly. This may involve reallocation.
+/// @brief Replaces a substring within the string. If 'new_val' and 'old_val' are not the same length, the string will resize accordingly. This may cause a reallocation.
 /// @param string said string
 /// @param offset where to start replacing characters
 /// @param old_val the old value
 /// @param new_val the new value
 void dstring_replace(DString* string, size_t offset, const char_t* old_val, const char_t* new_val);
 
-/// @brief finds the first instance of 'c' in string
+/// @brief Finds the first instance of 'c' in string.
 /// @param string said string
 /// @param c the character to search for
 /// @return position of 'c' in string if found otherwise returns DYN_STRING_NPOS
 size_t dstring_find(DString* string, char_t c);
 
-/// @brief finds the last instance of 'c' in string
+/// @brief Finds the last instance of 'c' in string.
 /// @param string said string
 /// @param c the character to search for
 /// @return position of 'c' in string if found otherwise returns DYN_STRING_NPOS
 size_t dstring_reverse_find(DString *string, char_t c);
 
-/// @brief compares two strings
+/// @brief Compares two strings.
 /// @param lhs left operand
 /// @param rhs right operand
 /// @return 1 if strings are equal otherwise 0
@@ -156,6 +192,8 @@ const char_t* dstring_to_cstr(DString* string)
 
 DString dstring_substring(DString* string, size_t offset, size_t count)
 {
+    D_ASSERT(string->data != NULL);
+    D_ASSERT(offset < string->size);
     DString substring = dstring_create_with_capacity(count);
     memcpy(substring.data, string->data + offset, count);
     substring.size = count;
@@ -181,6 +219,12 @@ char_t dstring_pop(DString* string)
     string->size--;
     string->data[string->size] = '\0';
     return c;
+}
+
+int dstring_empty(DString* string)
+{
+    D_ASSERT(string->data != NULL);
+    return string->size == 0;
 }
 
 void dstring_shift(DString *string, size_t offset, int32_t amount)
@@ -212,6 +256,7 @@ void dstring_shift(DString *string, size_t offset, int32_t amount)
 void dstring_replace(DString* string, size_t offset, const char_t* old_val, const char_t* new_val)
 {
     D_ASSERT(string->data != NULL);
+    D_ASSERT(offset < string->size);
     size_t old_len = strlen(old_val);
     size_t new_len = strlen(new_val);
     
