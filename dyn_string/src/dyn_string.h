@@ -68,6 +68,7 @@ DString dstring_create_with_capacity(size_t capacity);
 void dstring_destroy(DString* string);
 void dstring_realloc(DString* string, size_t new_capacity);
 const char_t* dstring_to_cstr(DString* string);
+DString dstring_substring(DString* string, size_t offset, size_t count);
 void dstring_push(DString* string, char_t c);
 char_t dstring_pop(DString* string);
 
@@ -151,6 +152,15 @@ const char_t* dstring_to_cstr(DString* string)
 {
     D_ASSERT(string->data[string->size] == '\0');
     return (const char_t*)string->data;
+}
+
+DString dstring_substring(DString* string, size_t offset, size_t count)
+{
+    DString substring = dstring_create_with_capacity(count);
+    memcpy(substring.data, string->data + offset, count);
+    substring.size = count;
+    substring.data[substring.size] = '\0';
+    return substring;
 }
 
 void dstring_push(DString* string, char_t c)

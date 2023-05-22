@@ -20,8 +20,9 @@ int main(void)
     {
         DString string = dstring_create("Hello, World!");
 
-        dstring_replace(&string, 0, "Hello, ", "");
-        printf("%s\n", dstring_to_cstr(&string));
+        DString sub = dstring_substring(&string, 0, 5);
+        dstring_push(&sub, '!');
+        printf("%s\n", dstring_to_cstr(&sub));
     }
     return 0;
 }
