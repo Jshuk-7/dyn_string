@@ -1,6 +1,8 @@
 #ifndef DYN_STRING_H
 #define DYN_STRING_H
 
+/// @file dyn_string.h
+
 #include <string.h>
 #include <stdint.h>
 
@@ -56,6 +58,7 @@ typedef char char_t;
 
 #define DYN_STRING_NPOS 1728772372
 
+/// @brief dynamic, null terminated, string
 typedef struct DString
 {
     char_t* data;
