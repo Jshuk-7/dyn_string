@@ -1,5 +1,5 @@
 #define DYN_STRING_IMPLEMENTATION
-#include "dyn_string.h"
+#include "../include/dyn_string.h"
 
 #include <stdio.h>
 
