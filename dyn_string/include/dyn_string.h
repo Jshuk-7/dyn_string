@@ -54,24 +54,24 @@
  *    These members should also never be modified directly, only through a library function.
  */
 
-#ifndef D_MALLOC
+#ifndef DS_MALLOC
 #include <stdlib.h>
-#define D_MALLOC malloc
+#define DS_MALLOC malloc
 #endif
 
-#ifndef D_REALLOC
+#ifndef DS_REALLOC
 #include <stdlib.h>
-#define D_REALLOC realloc
+#define DS_REALLOC realloc
 #endif
 
-#ifndef D_FREE
+#ifndef DS_FREE
 #include <stdlib.h>
-#define D_FREE free
+#define DS_FREE free
 #endif
 
-#ifndef D_ASSERT
+#ifndef DS_ASSERT
 #include <assert.h>
-#define D_ASSERT assert
+#define DS_ASSERT assert
 #endif
 
 #ifdef DYN_STRING_USE_WIDE
@@ -159,6 +159,18 @@ char_t dstring_front(const DString* string);
 /// @return the last character in the strings buffer
 char_t dstring_back(const DString* string);
 
+/// @brief Gets a character from the string by index. The index must be less than the size of the string.
+/// @param string said string
+/// @param index the index into the strings buffer
+/// @return the character at 'index' in the string
+char_t dstring_get_char(const DString* string, size_t index);
+
+/// @brief Sets a character in the string. The index must be less than the size of the string.
+/// @param string said string
+/// @param index the index into the strings buffer
+/// @param c the character value to set in the string
+void dstring_set_char(DString* string, size_t index, char_t c);
+
 /// @brief Shifts all elements of string by 'amount'.
 /// @param string said string
 /// @param offset where to start shifting
@@ -218,25 +230,25 @@ void dstring_destroy(DString* string)
 {
     string->size = 0;
     string->capacity = 0;
-    D_FREE(string->data);
+    DS_FREE(string->data);
     string->data = NULL;
 }
 
 void dstring_realloc(DString* string, size_t new_capacity)
 {
     if (string->data == NULL) {
-        string->data = (char_t*)D_MALLOC(sizeof(char_t) * new_capacity);
+        string->data = (char_t*)DS_MALLOC(sizeof(char_t) * new_capacity);
     } else {
-        string->data = (char_t*)D_REALLOC(string->data, sizeof(char_t) * new_capacity);
+        string->data = (char_t*)DS_REALLOC(string->data, sizeof(char_t) * new_capacity);
     }
 
-    D_ASSERT(string->data != NULL);
+    DS_ASSERT(string->data != NULL);
     string->capacity = new_capacity;
 }
 
 void dstring_reserve(DString* string, size_t n)
 {
-    D_ASSERT(string->data != NULL);
+    DS_ASSERT(string->data != NULL);
     size_t remaining = string->capacity - string->size;
 
     if (n > remaining) {
@@ -246,20 +258,20 @@ void dstring_reserve(DString* string, size_t n)
 
 int dstring_empty(const DString* string)
 {
-    D_ASSERT(string->data != NULL);
+    DS_ASSERT(string->data != NULL);
     return string->size == 0;
 }
 
 void dstring_clear(DString* string)
 {
-    D_ASSERT(string->data != NULL);
+    DS_ASSERT(string->data != NULL);
     memset(string->data, ' ', string->capacity);
     string->size = 0;
 }
 
 void dstring_shrink_to_fit(DString* string)
 {
-    D_ASSERT(string->data != NULL);
+    DS_ASSERT(string->data != NULL);
     if (string->size < string->capacity) {
         dstring_realloc(string, string->size);
     }
@@ -267,15 +279,15 @@ void dstring_shrink_to_fit(DString* string)
 
 const char_t* dstring_to_cstr(const DString* string)
 {
-    D_ASSERT(string->data != NULL);
-    D_ASSERT(string->data[string->size] == '\0');
+    DS_ASSERT(string->data != NULL);
+    DS_ASSERT(string->data[string->size] == '\0');
     return (const char_t*)string->data;
 }
 
 DString dstring_substring(const DString* string, size_t offset, size_t count)
 {
-    D_ASSERT(string->data != NULL);
-    D_ASSERT(offset < string->size);
+    DS_ASSERT(string->data != NULL);
+    DS_ASSERT(offset < string->size);
     DString substring = dstring_create_with_capacity(count);
     memcpy(substring.data, string->data + offset, count);
     substring.size = count;
@@ -285,7 +297,7 @@ DString dstring_substring(const DString* string, size_t offset, size_t count)
 
 void dstring_push(DString* string, char_t c)
 {
-    D_ASSERT(string->data != NULL);
+    DS_ASSERT(string->data != NULL);
     if (string->size + 1 >= string->capacity) {
         dstring_realloc(string, string->capacity * 2);
     }
@@ -297,8 +309,8 @@ void dstring_push(DString* string, char_t c)
 
 char_t dstring_pop(DString* string)
 {
-    D_ASSERT(string->data != NULL);
-    D_ASSERT(string->size > 0);
+    DS_ASSERT(string->data != NULL);
+    DS_ASSERT(string->size > 0);
     char_t c = string->data[string->size - 1];
     string->size--;
     string->data[string->size] = '\0';
@@ -307,23 +319,35 @@ char_t dstring_pop(DString* string)
 
 char_t dstring_front(const DString* string)
 {
-    D_ASSERT(string->data != NULL);
+    DS_ASSERT(string->data != NULL);
     return string->data[0];
 }
 
 char_t dstring_back(const DString* string)
 {
-    D_ASSERT(string->data != NULL);
+    DS_ASSERT(string->data != NULL);
     return string->data[string->size - 1];
+}
+
+char_t dstring_get_char(const DString *string, size_t index)
+{
+    DS_ASSERT(string->data != NULL);
+    DS_ASSERT(index < string->size);
+    return string->data[index];
+}
+
+void dstring_set_char(DString *string, size_t index, char_t c)
+{
+    DS_ASSERT(string->data != NULL);
+    DS_ASSERT(index < string->size);
+    string->data[index] = c;
 }
 
 void dstring_shift(DString* string, size_t offset, int32_t amount)
 {
-    D_ASSERT(string->data != NULL);
-    D_ASSERT(offset < string->size);
-    if (amount == 0) {
-        return;
-    }
+    DS_ASSERT(string->data != NULL);
+    DS_ASSERT(offset < string->size);
+    DS_ASSERT(amount > 0);
 
     if (string->size + amount >= string->capacity) {
         dstring_realloc(string, string->capacity + amount);
@@ -346,8 +370,8 @@ void dstring_shift(DString* string, size_t offset, int32_t amount)
 
 void dstring_replace(DString* string, size_t offset, const char_t* old_val, const char_t* new_val)
 {
-    D_ASSERT(string->data != NULL);
-    D_ASSERT(offset < string->size);
+    DS_ASSERT(string->data != NULL);
+    DS_ASSERT(offset < string->size);
     size_t old_len = strlen(old_val);
     size_t new_len = strlen(new_val);
     
@@ -363,7 +387,7 @@ void dstring_replace(DString* string, size_t offset, const char_t* old_val, cons
 
 size_t dstring_find(const DString* string, char_t c)
 {
-    D_ASSERT(string->data != NULL);
+    DS_ASSERT(string->data != NULL);
 
     for (size_t i = 0; i < string->size; i++) {
         if (string->data[i] == c) {
@@ -376,7 +400,7 @@ size_t dstring_find(const DString* string, char_t c)
 
 size_t dstring_reverse_find(const DString* string, char_t c)
 {
-    D_ASSERT(string->data != NULL);
+    DS_ASSERT(string->data != NULL);
 
     for (size_t i = string->size - 1; i >= 0; i--) {
         if (string->data[i] == c) {
@@ -389,8 +413,8 @@ size_t dstring_reverse_find(const DString* string, char_t c)
 
 int dstring_cmp(const DString* lhs, const DString* rhs)
 {
-    D_ASSERT(lhs->data != NULL);
-    D_ASSERT(rhs->data != NULL);
+    DS_ASSERT(lhs->data != NULL);
+    DS_ASSERT(rhs->data != NULL);
     if (lhs->size != rhs->size) {
         return 0;
     }
