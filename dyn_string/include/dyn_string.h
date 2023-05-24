@@ -117,7 +117,7 @@ void dstring_reserve(DString* string, size_t n);
 /// @brief Checks if the string is empty.
 /// @param string said string
 /// @return 1 if empty otherwise 0
-int dstring_empty(DString* string);
+int dstring_empty(const DString* string);
 
 /// @brief Empties the strings buffer. Size gets set to 0.
 /// @param string said string
@@ -130,14 +130,14 @@ void dstring_shrink_to_fit(DString *string);
 /// @brief Converts the strings buffer to a c string.
 /// @param string said string
 /// @return the strings buffer as a null terminated c string
-const char_t* dstring_to_cstr(DString* string);
+const char_t* dstring_to_cstr(const DString* string);
 
 /// @brief Gets a substring from a string.
 /// @param string the string to extract from
 /// @param offset where to start the substring
 /// @param count the length of the substring
 /// @return a new string with capacity of 'count'
-DString dstring_substring(DString* string, size_t offset, size_t count);
+DString dstring_substring(const DString* string, size_t offset, size_t count);
 
 /// @brief Pushes a character to the strings buffer. This will cause a reallocation if pushing exceeds the strings capacity.
 /// @param string said string
@@ -152,12 +152,12 @@ char_t dstring_pop(DString* string);
 /// @brief Gets the first character of the string.
 /// @param string said string
 /// @return the first character in the strings buffer
-char_t dstring_front(DString* string);
+char_t dstring_front(const DString* string);
 
 /// @brief Gets the last character of the string.
 /// @param string said string
 /// @return the last character in the strings buffer
-char_t dstring_back(DString* string);
+char_t dstring_back(const DString* string);
 
 /// @brief Shifts all elements of string by 'amount'.
 /// @param string said string
@@ -176,19 +176,19 @@ void dstring_replace(DString* string, size_t offset, const char_t* old_val, cons
 /// @param string said string
 /// @param c the character to search for
 /// @return position of 'c' in string if found otherwise returns DYN_STRING_NPOS
-size_t dstring_find(DString* string, char_t c);
+size_t dstring_find(const DString* string, char_t c);
 
 /// @brief Finds the last instance of 'c' in string.
 /// @param string said string
 /// @param c the character to search for
 /// @return position of 'c' in string if found otherwise returns DYN_STRING_NPOS
-size_t dstring_reverse_find(DString *string, char_t c);
+size_t dstring_reverse_find(const DString *string, char_t c);
 
 /// @brief Compares two strings.
 /// @param lhs left operand
 /// @param rhs right operand
 /// @return 1 if strings are equal otherwise 0
-int dstring_cmp(DString* lhs, DString* rhs);
+int dstring_cmp(const DString* lhs, const DString* rhs);
 
 #endif
 
@@ -244,7 +244,7 @@ void dstring_reserve(DString* string, size_t n)
     }
 }
 
-int dstring_empty(DString* string)
+int dstring_empty(const DString* string)
 {
     D_ASSERT(string->data != NULL);
     return string->size == 0;
@@ -265,14 +265,14 @@ void dstring_shrink_to_fit(DString* string)
     }
 }
 
-const char_t* dstring_to_cstr(DString* string)
+const char_t* dstring_to_cstr(const DString* string)
 {
     D_ASSERT(string->data != NULL);
     D_ASSERT(string->data[string->size] == '\0');
     return (const char_t*)string->data;
 }
 
-DString dstring_substring(DString* string, size_t offset, size_t count)
+DString dstring_substring(const DString* string, size_t offset, size_t count)
 {
     D_ASSERT(string->data != NULL);
     D_ASSERT(offset < string->size);
@@ -305,13 +305,13 @@ char_t dstring_pop(DString* string)
     return c;
 }
 
-char_t dstring_front(DString* string)
+char_t dstring_front(const DString* string)
 {
     D_ASSERT(string->data != NULL);
     return string->data[0];
 }
 
-char_t dstring_back(DString* string)
+char_t dstring_back(const DString* string)
 {
     D_ASSERT(string->data != NULL);
     return string->data[string->size - 1];
@@ -361,7 +361,7 @@ void dstring_replace(DString* string, size_t offset, const char_t* old_val, cons
     }
 }
 
-size_t dstring_find(DString* string, char_t c)
+size_t dstring_find(const DString* string, char_t c)
 {
     D_ASSERT(string->data != NULL);
 
@@ -374,7 +374,7 @@ size_t dstring_find(DString* string, char_t c)
     return DYN_STRING_NPOS;
 }
 
-size_t dstring_reverse_find(DString* string, char_t c)
+size_t dstring_reverse_find(const DString* string, char_t c)
 {
     D_ASSERT(string->data != NULL);
 
@@ -387,7 +387,7 @@ size_t dstring_reverse_find(DString* string, char_t c)
     return DYN_STRING_NPOS;
 }
 
-int dstring_cmp(DString* lhs, DString* rhs)
+int dstring_cmp(const DString* lhs, const DString* rhs)
 {
     D_ASSERT(lhs->data != NULL);
     D_ASSERT(rhs->data != NULL);
